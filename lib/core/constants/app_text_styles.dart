@@ -1,0 +1,58 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import 'app_colors.dart';
+
+class AppTextStyles {
+  AppTextStyles._();
+
+  static TextStyle get tagline => GoogleFonts.spaceMono(
+        color: AppColors.white,
+        fontSize: 13,
+        height: 1.55,
+        fontWeight: FontWeight.w400,
+      );
+
+  static TextStyle get appTitle => GoogleFonts.inter(
+        color: AppColors.white,
+        fontSize: 36,
+        fontWeight: FontWeight.w800,
+        letterSpacing: 6,
+      );
+
+  static TextStyle get authTitle => GoogleFonts.inter(
+        color: AppColors.white,
+        fontSize: 32,
+        fontWeight: FontWeight.w700,
+      );
+
+  static TextStyle get footer => GoogleFonts.inter(
+        color: AppColors.white,
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+      );
+
+  static TextStyle get footerBold => GoogleFonts.inter(
+        color: AppColors.white,
+        fontSize: 14,
+        fontWeight: FontWeight.w700,
+      );
+
+  static TextStyle get dividerOr => GoogleFonts.inter(
+        color: AppColors.white.withValues(alpha: 0.7),
+        fontSize: 13,
+        fontWeight: FontWeight.w500,
+      );
+
+  static TextStyle get fieldLabel => GoogleFonts.inter(
+        color: AppColors.inputHint,
+        fontSize: 14,
+        fontWeight: FontWeight.w500,
+      );
+
+  static TextStyle get button => GoogleFonts.inter(
+        color: AppColors.white,
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
+      );
+}
