@@ -1,18 +1,19 @@
 import '../../domain/entities/app_user.dart';
 import '../../domain/repositories/auth_repository.dart';
+import '../datasources/auth_local_datasource.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
+  AuthRepositoryImpl({AuthLocalDataSource? localDataSource})
+      : _localDataSource = localDataSource ?? AuthLocalDataSource();
+
+  final AuthLocalDataSource _localDataSource;
+
   @override
   Future<AppUser> login({
     required String email,
     required String password,
-  }) async {
-    await Future<void>.delayed(const Duration(milliseconds: 600));
-    return AppUser(
-      id: 'placeholder-id',
-      fullName: 'User',
-      email: email,
-    );
+  }) {
+    return _localDataSource.login(email: email, password: password);
   }
 
   @override
@@ -20,22 +21,11 @@ class AuthRepositoryImpl implements AuthRepository {
     required String fullName,
     required String email,
     required String password,
-  }) async {
-    await Future<void>.delayed(const Duration(milliseconds: 600));
-    return AppUser(
-      id: 'placeholder-id',
+  }) {
+    return _localDataSource.register(
       fullName: fullName,
       email: email,
-    );
-  }
-
-  @override
-  Future<AppUser> signInWithGoogle() async {
-    await Future<void>.delayed(const Duration(milliseconds: 600));
-    return const AppUser(
-      id: 'google-placeholder-id',
-      fullName: 'Google User',
-      email: 'user@gmail.com',
+      password: password,
     );
   }
 }

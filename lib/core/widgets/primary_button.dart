@@ -9,17 +9,22 @@ class PrimaryButton extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.isLoading = false,
+    this.width,
   });
 
   final String label;
   final VoidCallback? onPressed;
   final bool isLoading;
 
+  /// Set width to control button size (e.g. `screenWidth * 0.82`).
+  /// When null, the button stretches to the parent width.
+  final double? width;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: double.infinity,
-      height: 52,
+      width: width ?? double.infinity,
+      height: 58,
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(

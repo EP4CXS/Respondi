@@ -26,6 +26,52 @@ class AppTextStyles {
         fontWeight: FontWeight.w700,
       );
 
+  /// Sign-in / sign-up screens — monospaced like the reference.
+  static TextStyle get authTitleMono => GoogleFonts.spaceMono(
+        color: AppColors.white,
+        fontSize: 34,
+        fontWeight: FontWeight.w700,
+        height: 1.1,
+      );
+
+  static TextStyle get authFieldLabel => GoogleFonts.spaceMono(
+        color: AppColors.white,
+        fontSize: 13,
+        fontWeight: FontWeight.w400,
+      );
+
+  static TextStyle get authFieldInput => GoogleFonts.spaceMono(
+        color: AppColors.white,
+        fontSize: 15,
+        fontWeight: FontWeight.w400,
+      );
+
+  static TextStyle get authButton => GoogleFonts.spaceMono(
+        color: AppColors.white,
+        fontSize: 14,
+        fontWeight: FontWeight.w500,
+      );
+
+  static TextStyle get authDividerOr => GoogleFonts.spaceMono(
+        color: AppColors.white.withValues(alpha: 0.85),
+        fontSize: 12,
+        fontWeight: FontWeight.w400,
+      );
+
+  static TextStyle get authFooterItalic => GoogleFonts.spaceMono(
+        color: AppColors.white,
+        fontSize: 13,
+        fontStyle: FontStyle.italic,
+        fontWeight: FontWeight.w400,
+      );
+
+  static TextStyle get authFooterBoldItalic => GoogleFonts.spaceMono(
+        color: AppColors.white,
+        fontSize: 13,
+        fontStyle: FontStyle.italic,
+        fontWeight: FontWeight.w700,
+      );
+
   static TextStyle get footer => GoogleFonts.inter(
         color: AppColors.white,
         fontSize: 14,

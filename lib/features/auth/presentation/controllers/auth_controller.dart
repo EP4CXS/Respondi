@@ -1,20 +1,22 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../domain/entities/app_user.dart';
-import '../../domain/usecases/google_sign_in_usecase.dart';
+import '../../domain/exceptions/auth_failure.dart';
+import '../../domain/repositories/auth_repository.dart';
 import '../../domain/usecases/login_usecase.dart';
 import '../../domain/usecases/register_usecase.dart';
 import '../../infrastructure/repositories/auth_repository_impl.dart';
 
 class AuthController extends ChangeNotifier {
-  AuthController()
-      : _loginUseCase = LoginUseCase(AuthRepositoryImpl()),
-        _registerUseCase = RegisterUseCase(AuthRepositoryImpl()),
-        _googleSignInUseCase = GoogleSignInUseCase(AuthRepositoryImpl());
+  AuthController({AuthRepository? repository}) {
+    final repo = repository ?? AuthRepositoryImpl();
+    _loginUseCase = LoginUseCase(repo);
+    _registerUseCase = RegisterUseCase(repo);
+  }
 
-  final LoginUseCase _loginUseCase;
-  final RegisterUseCase _registerUseCase;
-  final GoogleSignInUseCase _googleSignInUseCase;
+  late final LoginUseCase _loginUseCase;
+  late final RegisterUseCase _registerUseCase;
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -26,6 +28,7 @@ class AuthController extends ChangeNotifier {
 
   bool isLoading = false;
   String? errorMessage;
+  String? successMessage;
   AppUser? currentUser;
 
   static final _emailRegex = RegExp(
@@ -70,15 +73,15 @@ class AuthController extends ChangeNotifier {
     if (!(loginFormKey.currentState?.validate() ?? false)) return;
 
     _setLoading(true);
+    errorMessage = null;
     try {
       currentUser = await _loginUseCase(
         email: emailController.text.trim(),
         password: passwordController.text,
       );
-      errorMessage = null;
       debugPrint('Login success: ${currentUser?.email}');
     } catch (e) {
-      errorMessage = e.toString();
+      errorMessage = _mapError(e);
     } finally {
       _setLoading(false);
     }
@@ -88,32 +91,33 @@ class AuthController extends ChangeNotifier {
     if (!(signupFormKey.currentState?.validate() ?? false)) return;
 
     _setLoading(true);
+    errorMessage = null;
+    successMessage = null;
     try {
       currentUser = await _registerUseCase(
         fullName: fullNameController.text.trim(),
         email: emailController.text.trim(),
         password: passwordController.text,
       );
-      errorMessage = null;
-      debugPrint('Register success: ${currentUser?.email}');
+      if (kIsWeb) {
+        debugPrint(
+          'Register success: ${currentUser?.email} '
+          '(stored in browser — not the Windows respondi.db file)',
+        );
+      } else {
+        debugPrint('Register success: ${currentUser?.email}');
+      }
+      successMessage = 'Account created and saved to the app database.';
     } catch (e) {
-      errorMessage = e.toString();
+      errorMessage = _mapError(e);
     } finally {
       _setLoading(false);
     }
   }
 
-  Future<void> signInWithGoogle() async {
-    _setLoading(true);
-    try {
-      currentUser = await _googleSignInUseCase();
-      errorMessage = null;
-      debugPrint('Google sign-in success: ${currentUser?.email}');
-    } catch (e) {
-      errorMessage = e.toString();
-    } finally {
-      _setLoading(false);
-    }
+  String _mapError(Object e) {
+    if (e is AuthFailure) return e.message;
+    return e.toString();
   }
 
   void clearAuthFields() {
@@ -122,6 +126,7 @@ class AuthController extends ChangeNotifier {
     fullNameController.clear();
     confirmPasswordController.clear();
     errorMessage = null;
+    successMessage = null;
     notifyListeners();
   }
 

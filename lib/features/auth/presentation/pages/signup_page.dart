@@ -3,13 +3,12 @@ import 'package:flutter/material.dart';
 import '../../../../app/routes/app_routes.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../../../core/widgets/app_logo.dart';
-import '../../../../core/widgets/auth_divider.dart';
 import '../../../../core/widgets/auth_footer_text.dart';
 import '../../../../core/widgets/background_scaffold.dart';
 import '../../../../core/widgets/custom_auth_text_field.dart';
-import '../../../../core/widgets/google_button.dart';
 import '../../../../core/widgets/primary_button.dart';
 import '../controllers/auth_controller.dart';
+import '../utils/auth_feedback.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -32,6 +31,21 @@ class _SignupPageState extends State<SignupPage> {
     if (mounted) setState(() {});
   }
 
+  Future<void> _onSignUp() async {
+    await _controller.register();
+    if (!mounted) return;
+    if (_controller.successMessage != null) {
+      showAuthMessage(
+        context,
+        _controller.successMessage,
+        isSuccess: true,
+      );
+      _controller.clearAuthFields();
+      return;
+    }
+    showAuthMessage(context, _controller.errorMessage);
+  }
+
   @override
   void dispose() {
     _controller.removeListener(_onControllerUpdate);
@@ -42,7 +56,11 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.sizeOf(context).height;
-    final logoSize = (screenHeight * 0.1).clamp(56.0, 80.0);
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final logoSize = (screenHeight * 0.1).clamp(56.0, 90.0);
+
+    // Edited: Sign Up button width — same as Log in on login_page.dart (change 0.60 to adjust)
+    final signUpButtonWidth = screenWidth * 0.60;
 
     return BackgroundScaffold(
       resizeToAvoidBottomInset: true,
@@ -53,64 +71,74 @@ class _SignupPageState extends State<SignupPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SizedBox(height: screenHeight * 0.03),
-              Center(child: AppLogo(size: logoSize)),
-              const SizedBox(height: 20),
-              Text('Sign Up', style: AppTextStyles.authTitle),
-              const SizedBox(height: 24),
+              SizedBox(height: screenHeight * 0.09),
+              Center(
+                child: AppLogo(
+                  size: logoSize,
+                  onTap: () {
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      AppRoutes.landing,
+                      (route) => false,
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 30),
+              Text('Sign Up', style: AppTextStyles.authTitleMono),
+              const SizedBox(height: 36),
               CustomAuthTextField(
+                label: 'Fullname',
                 controller: _controller.fullNameController,
-                hintText: 'Fullname',
                 textInputAction: TextInputAction.next,
                 validator: _controller.validateFullName,
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: 22),
               CustomAuthTextField(
+                label: 'Email',
                 controller: _controller.emailController,
-                hintText: 'Email',
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
                 validator: _controller.validateEmail,
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: 22),
               CustomAuthTextField(
+                label: 'Password',
                 controller: _controller.passwordController,
-                hintText: 'Password',
                 obscureText: true,
                 textInputAction: TextInputAction.next,
                 validator: _controller.validatePassword,
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: 22),
               CustomAuthTextField(
+                label: 'Confirm password',
                 controller: _controller.confirmPasswordController,
-                hintText: 'Confirm password',
                 obscureText: true,
                 textInputAction: TextInputAction.done,
                 validator: _controller.validateConfirmPassword,
                 onFieldSubmitted: (_) => _controller.register(),
               ),
-              const SizedBox(height: 24),
-              PrimaryButton(
-                label: 'Sign Up',
-                isLoading: _controller.isLoading,
-                onPressed: _controller.register,
+              const SizedBox(height: 50),
+              Align(
+                alignment: Alignment.center,
+                child: PrimaryButton(
+                  label: 'Sign Up',
+                  width: signUpButtonWidth, // Edited: button width control
+                  isLoading: _controller.isLoading,
+                  onPressed: _onSignUp,
+                ),
               ),
-              const SizedBox(height: 24),
-              const AuthDivider(),
-              const SizedBox(height: 24),
-              GoogleButton(
-                isLoading: _controller.isLoading,
-                onPressed: _controller.signInWithGoogle,
-              ),
-              const SizedBox(height: 28),
+              // Edited: Footer closer to Sign Up (removed or + Google)
+              const SizedBox(height: 40),
               AuthFooterText(
+                italic: true,
                 prefix: 'Already have an account? ',
                 actionLabel: 'Sign in',
                 onActionTap: () {
                   Navigator.pushReplacementNamed(context, AppRoutes.login);
                 },
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: screenHeight * 0.04),
             ],
           ),
         ),

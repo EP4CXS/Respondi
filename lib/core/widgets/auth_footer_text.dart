@@ -9,23 +9,33 @@ class AuthFooterText extends StatelessWidget {
     required this.prefix,
     required this.actionLabel,
     required this.onActionTap,
+    this.italic = false,
   });
 
   final String prefix;
   final String actionLabel;
   final VoidCallback onActionTap;
 
+  /// Sign-in reference uses italic footer with bold italic link.
+  final bool italic;
+
   @override
   Widget build(BuildContext context) {
+    final baseStyle =
+        italic ? AppTextStyles.authFooterItalic : AppTextStyles.footer;
+    final actionStyle = italic
+        ? AppTextStyles.authFooterBoldItalic
+        : AppTextStyles.footerBold;
+
     return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(
-        style: AppTextStyles.footer,
+        style: baseStyle,
         children: [
           TextSpan(text: prefix),
           TextSpan(
             text: actionLabel,
-            style: AppTextStyles.footerBold,
+            style: actionStyle,
             recognizer: TapGestureRecognizer()..onTap = onActionTap,
           ),
         ],
