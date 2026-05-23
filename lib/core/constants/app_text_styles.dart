@@ -101,4 +101,30 @@ class AppTextStyles {
         fontSize: 16,
         fontWeight: FontWeight.w600,
       );
+
+  static TextStyle get chatInputHint => GoogleFonts.spaceMono(
+        color: AppColors.black,
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+      );
+
+  static TextStyle get chatTodayLabel => GoogleFonts.spaceMono(
+        color: AppColors.white,
+        fontSize: 11,
+        fontWeight: FontWeight.w500,
+      );
+
+  static TextStyle get chatWelcome => GoogleFonts.spaceMono(
+        color: AppColors.black,
+        fontSize: 15,
+        fontWeight: FontWeight.w400,
+        height: 1.4,
+      );
+
+  static TextStyle get chatMessageText => GoogleFonts.spaceMono(
+        color: AppColors.black,
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+        height: 1.35,
+      );
 }

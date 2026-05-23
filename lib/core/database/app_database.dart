@@ -62,8 +62,23 @@ class AppDatabase {
   }
 
   static Future<void> _onCreate(Database db, int version) async {
+    await _createUsersTable(db);
+    await _createChatTables(db);
+  }
+
+  static Future<void> _onUpgrade(
+    Database db,
+    int oldVersion,
+    int newVersion,
+  ) async {
+    if (oldVersion < 2) {
+      await _createChatTables(db);
+    }
+  }
+
+  static Future<void> _createUsersTable(Database db) async {
     await db.execute('''
-      CREATE TABLE ${DatabaseConstants.usersTable} (
+      CREATE TABLE IF NOT EXISTS ${DatabaseConstants.usersTable} (
         ${DatabaseConstants.colId} TEXT PRIMARY KEY,
         ${DatabaseConstants.colFullName} TEXT NOT NULL,
         ${DatabaseConstants.colEmail} TEXT NOT NULL UNIQUE,
@@ -74,13 +89,28 @@ class AppDatabase {
     ''');
   }
 
-  static Future<void> _onUpgrade(
-    Database db,
-    int oldVersion,
-    int newVersion,
-  ) async {
-    if (oldVersion < newVersion) {
-      // Future migrations go here.
-    }
+  static Future<void> _createChatTables(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS ${DatabaseConstants.chatSessionsTable} (
+        ${DatabaseConstants.colId} TEXT PRIMARY KEY,
+        ${DatabaseConstants.colUserId} TEXT NOT NULL,
+        ${DatabaseConstants.colTitle} TEXT NOT NULL,
+        ${DatabaseConstants.colCreatedAt} INTEGER NOT NULL,
+        ${DatabaseConstants.colUpdatedAt} INTEGER NOT NULL,
+        FOREIGN KEY (${DatabaseConstants.colUserId})
+          REFERENCES ${DatabaseConstants.usersTable}(${DatabaseConstants.colId})
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS ${DatabaseConstants.chatMessagesTable} (
+        ${DatabaseConstants.colId} TEXT PRIMARY KEY,
+        ${DatabaseConstants.colSessionId} TEXT NOT NULL,
+        ${DatabaseConstants.colRole} TEXT NOT NULL,
+        ${DatabaseConstants.colContent} TEXT NOT NULL,
+        ${DatabaseConstants.colCreatedAt} INTEGER NOT NULL,
+        FOREIGN KEY (${DatabaseConstants.colSessionId})
+          REFERENCES ${DatabaseConstants.chatSessionsTable}(${DatabaseConstants.colId})
+      )
+    ''');
   }
 }

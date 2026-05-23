@@ -33,6 +33,8 @@ dependencies:
 
   cupertino_icons: ^1.0.8
   crypto: ^3.0.6
+  flutter_dotenv: ^5.2.1
+  http: ^1.2.2
   google_fonts: ^6.2.1
   path: ^1.9.1
   sqflite: ^2.4.2
@@ -63,6 +65,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - .env
     - assets/images/background.png
     - assets/images/logo.png
 

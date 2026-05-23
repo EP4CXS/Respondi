@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/routes/app_routes.dart';
+import '../../../../core/session/chat_session_manager.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../../../core/widgets/app_logo.dart';
 import '../../../../core/widgets/auth_footer_text.dart';
@@ -34,6 +35,16 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _onLogIn() async {
     await _controller.login();
     if (!mounted) return;
+    if (_controller.currentUser != null) {
+      ChatSessionManager.beginUserSession(_controller.currentUser!.id);
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AppRoutes.chat,
+        (route) => false,
+        arguments: _controller.currentUser,
+      );
+      return;
+    }
     showAuthMessage(context, _controller.errorMessage);
   }
 

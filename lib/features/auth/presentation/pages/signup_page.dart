@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/routes/app_routes.dart';
+import '../../../../core/session/chat_session_manager.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../../../core/widgets/app_logo.dart';
 import '../../../../core/widgets/auth_footer_text.dart';
@@ -34,13 +35,14 @@ class _SignupPageState extends State<SignupPage> {
   Future<void> _onSignUp() async {
     await _controller.register();
     if (!mounted) return;
-    if (_controller.successMessage != null) {
-      showAuthMessage(
+    if (_controller.currentUser != null) {
+      ChatSessionManager.beginUserSession(_controller.currentUser!.id);
+      Navigator.pushNamedAndRemoveUntil(
         context,
-        _controller.successMessage,
-        isSuccess: true,
+        AppRoutes.chat,
+        (route) => false,
+        arguments: _controller.currentUser,
       );
-      _controller.clearAuthFields();
       return;
     }
     showAuthMessage(context, _controller.errorMessage);
