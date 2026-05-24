@@ -10,6 +10,8 @@ import '../../domain/usecases/send_chat_message_usecase.dart';
 import '../../infrastructure/datasources/chat_history_datasource.dart';
 import '../../infrastructure/repositories/chat_repository_impl.dart';
 import '../../../../core/session/chat_session_manager.dart';
+import '../../../profile/presentation/pages/emergency_contacts_page.dart';
+import '../../../profile/presentation/pages/profile_page.dart';
 import '../widgets/animated_typing_indicator.dart';
 import '../widgets/chat_drawer.dart';
 
@@ -90,6 +92,22 @@ class _ChatPageState extends State<ChatPage> {
     await _drawerKey.currentState?.reloadSessions();
     if (!mounted) return;
     _scaffoldKey.currentState?.openDrawer();
+  }
+
+  void _openProfile() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => ProfilePage(user: widget.user),
+      ),
+    );
+  }
+
+  void _openEmergencyContacts() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const EmergencyContactsPage(),
+      ),
+    );
   }
 
   void _startNewChat() {
@@ -297,15 +315,18 @@ class _ChatPageState extends State<ChatPage> {
               ),
                 ),
               ),
-              const Positioned(
+              Positioned(
                 left: 0,
                 right: 0,
                 bottom: 0,
                 child: SafeArea(
                   top: false,
                   child: Padding(
-                    padding: EdgeInsets.only(bottom: _bottomNavBottomGap),
-                    child: _ChatBottomNav(),
+                    padding: const EdgeInsets.only(bottom: _bottomNavBottomGap),
+                    child: _ChatBottomNav(
+                      onProfileTap: _openProfile,
+                      onContactsTap: _openEmergencyContacts,
+                    ),
                   ),
                 ),
               ),
@@ -558,7 +579,13 @@ class _ChatInputBar extends StatelessWidget {
 }
 
 class _ChatBottomNav extends StatelessWidget {
-  const _ChatBottomNav();
+  const _ChatBottomNav({
+    this.onProfileTap,
+    this.onContactsTap,
+  });
+
+  final VoidCallback? onProfileTap;
+  final VoidCallback? onContactsTap;
 
   @override
   Widget build(BuildContext context) {
@@ -583,7 +610,7 @@ class _ChatBottomNav extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   IconButton(
-                    onPressed: () {},
+                    onPressed: onProfileTap,
                     icon: const Icon(
                       Icons.person_outline,
                       color: AppColors.black,
@@ -592,7 +619,7 @@ class _ChatBottomNav extends StatelessWidget {
                   ),
                   const SizedBox(width: centerSize),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: onContactsTap,
                     icon: Container(
                       width: 40,
                       height: 40,
