@@ -62,11 +62,11 @@ class _LoginPageState extends State<LoginPage> {
     final logoSize = (screenHeight * 0.11).clamp(64.0, 88.0);
 
     // Edited: Narrower column for inputs/buttons (~86% of screen width)
-    final formContentWidth = screenWidth * 0.86;
+    final formContentWidth = screenWidth * 0.76;
 
     // Edited: Log in button width (change 0.80 to adjust — higher = wider, lower = narrower)
     // Examples: 0.75 narrow | 0.80 current | 0.86 same as input fields | 1.0 full form width
-    final loginButtonWidth = screenWidth * 0.60;
+    final loginButtonWidth = screenWidth * 0.40;
 
     return BackgroundScaffold(
       resizeToAvoidBottomInset: true,
@@ -139,7 +139,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               ),
                               // Edited: Footer closer to Log in (removed or + Google)
-                              const SizedBox(height: 200),
+                              const SizedBox(height: 40),
                               AuthFooterText(
                                 italic: true,
                                 prefix: "Don't have an account? ",

@@ -9,6 +9,7 @@ class CustomAuthTextField extends StatefulWidget {
     required this.controller,
     this.label,
     this.hintText,
+    this.width,
     this.obscureText = false,
     this.showPasswordToggle = false,
     this.keyboardType = TextInputType.text,
@@ -20,6 +21,7 @@ class CustomAuthTextField extends StatefulWidget {
   final TextEditingController controller;
   final String? label;
   final String? hintText;
+  final double? width;
   final bool obscureText;
   final bool showPasswordToggle;
   final TextInputType keyboardType;
@@ -122,17 +124,18 @@ class _CustomAuthTextFieldState extends State<CustomAuthTextField> {
       decoration: _decoration(),
     );
 
-    if (widget.label == null) {
-      return field;
-    }
-
-    return Column(
+    final Widget content = (widget.label == null) ? field : Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(widget.label!, style: AppTextStyles.authFieldLabel),
         const SizedBox(height: 8),
         field,
       ],
+    );
+
+    return widget.width == null ? content : SizedBox(
+      width: widget.width,
+      child: content,
     );
   }
 }
