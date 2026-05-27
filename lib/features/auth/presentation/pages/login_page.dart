@@ -65,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
     final formContentWidth = screenWidth * 0.76;
 
     // Edited: Log in button width (change 0.80 to adjust — higher = wider, lower = narrower)
-    // Examples: 0.75 narrow | 0.80 current | 0.86 same as input fields | 1.0 full form width
+  
     final loginButtonWidth = screenWidth * 0.40;
 
     return BackgroundScaffold(
