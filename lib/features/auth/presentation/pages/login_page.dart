@@ -61,11 +61,9 @@ class _LoginPageState extends State<LoginPage> {
     final screenWidth = MediaQuery.sizeOf(context).width;
     final logoSize = (screenHeight * 0.11).clamp(64.0, 88.0);
 
-    // Edited: Narrower column for inputs/buttons (~86% of screen width)
     final formContentWidth = screenWidth * 0.76;
 
-    // Edited: Log in button width (change 0.80 to adjust — higher = wider, lower = narrower)
-  
+
     final loginButtonWidth = screenWidth * 0.40;
 
     return BackgroundScaffold(
